@@ -1,6 +1,7 @@
 ############################################
 ################# PACKAGES #################
 ############################################
+rm(list = ls())
 
 library(httr)
 library(XML)
@@ -9,57 +10,23 @@ library(RODBC)
 library(RMySQL)
 library(DBI)
 
+
+############################################
+################# SOURCES ##################
+############################################
+
+source("function_holder.R")
+source("xml_querries.R")
+source("http_querries.R")
+
 ############################################
 ########## MAIN CODE TO INITINITY ##########
 ############################################
 
 
-url = paste("http://svcs.ebay.com/services/search/FindingService/v1?"
-            ,"OPERATION-NAME=findItemsByCategory&"
-            ,"SERVICE-VERSION=1.0.0&"
-            ,"SECURITY-APPNAME=Sebastia-newheave-PRD-f8e35c535-843c594f&"
-            ,"RESPONSE-DATA-FORMAT=XML&"
-            ,"REST-PAYLOAD&"
-            ,"categoryId=10181&"
-            ,"paginationInput.entriesPerPage=2&"
-            ,"outputSelector=CategoryHistogram"
-            ,sep="") 
+## XML Request via POST method
 
-
-con <- dbConnect(RMySQL::MySQL(),
-                 dbname = "retrolan_newkirk",
-                 host = "ams30.siteground.eu",
-                 port = 3306,
-                 user =  "retrolan_gate",
-                 password = "sebastian1990")
-
-
-
-dbListTables(con)
-dbReadTable(con, "")
-dbDisconnect(con)
-dbGetQuery(con, "SELECT * FROM mtcars")
-
-add_headers(a = 1, b = 2)
-add_headers(.headers =  c(a = "1", b = "2"))
-GET("http://httpbin.org/headers")
-# Add arbitrary headers
-GET("http://svcs.ebay.com/services/search/FindingService/v1",
-    add_headers(version = version$version.string))
-
-
-st = "<?xml version="1.0" encoding="UTF-8"?>"
-
-
-add_headers(add_headers(.headers = c('X-EBAY-SOA-SECURITY-APPNAME' ='Sebastia-newheave-PRD-f8e35c535-843c594f',X-EBAY-SOA-OPERATION-NAME = "findCompletedItems")))
-
-r <- POST("https://svcs.ebay.com/services/search/FindingService/v1", body = rr, add_headers('X-EBAY-SOA-SECURITY-APPNAME' = 'Sebastia-newheave-PRD-f8e35c535-843c594f', 'X-EBAY-SOA-OPERATION-NAME' =  'findCompletedItems' ))
-
-#X-EBAY-SOA-SECURITY-APPNAME:Sebastia-newheave-PRD-f8e35c535-843c594f
-#X-EBAY-SOA-OPERATION-NAME:findCompletedItems
-
-
-rr = paste('<?xml version="1.0" encoding="UTF-8"?>',
+ss = paste('<?xml version="1.0" encoding="UTF-8"?>',
            '<findCompletedItemsRequest xmlns=\"http://www.ebay.com/marketplace/search/v1/services\">',
            "<keywords>iPhone</keywords>",
            "<categoryId>9355</categoryId>",
@@ -83,17 +50,59 @@ rr = paste('<?xml version="1.0" encoding="UTF-8"?>',
            "</findCompletedItemsRequest>",
            sep = "")
 
+# update the body param with the body request you need.
+r <- POST("https://svcs.ebay.com/services/search/FindingService/v1", 
+          body = paper_mario, 
+          add_headers('X-EBAY-SOA-SECURITY-APPNAME' = 'Sebastia-newheave-PRD-f8e35c535-843c594f',
+                      'X-EBAY-SOA-OPERATION-NAME' =  'findCompletedItems' ,
+                      'X-EBAY-SOA-GLOBAL-ID' = 'EBAY-DE' ))
 
 
-r <- GET(url)
 status_code(r)
 headers(r)
 node= xmlTreeParse(content(r, "text"),  asTree = TRUE)
-
-
-m = node$doc$children$findItemsByCategoryResponse
+# loading time related error => exec line by line ??
+m = node$doc$children$findCompletedItemsResponse
 s =xmlToList(m)
+########## overview STAART ##########
+View(s)
+s$searchResult[[15]]$pricingTreatment[[1]]
+########## OVERVIEW END ##########
 
+
+
+
+
+
+## tables to be updated
+## iterating through all itimes taking sorting out most important fields
+## to be defined which field of the reponse should be dropped
+
+dbListTables(con)
+dbReadTable(con, "")
+dbDisconnect(con)
+dbGetQuery(con, "SELECT * FROM mtcars")
+
+add_headers(a = 1, b = 2)
+add_headers(.headers =  c(a = "1", b = "2"))
+GET("http://httpbin.org/headers")
+# Add arbitrary headers
+GET("http://svcs.ebay.com/services/search/FindingService/v1",
+    add_headers(version = version$version.string))
+
+
+#add_headers(add_headers(.headers = c('X-EBAY-SOA-SECURITY-APPNAME' ='Sebastia-newheave-PRD-f8e35c535-843c594f',X-EBAY-SOA-OPERATION-NAME = "findCompletedItems")))
+
+
+
+
+
+
+
+
+
+
+r <- GET(url)
 s$searchResult[[37]]$pricingTreatment[[1]]
 
 
