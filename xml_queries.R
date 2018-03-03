@@ -16,17 +16,25 @@ get_query <- function(keyword, category_id){
          "<findCompletedItemsRequest xmlns=\"http://www.ebay.com/marketplace/search/v1/services\">",
          "<categoryId>",category_id,"</categoryId>",
          "<keywords>",keyword,"</keywords>",
+         # "<aspectFilter>
+         #   <aspectName>Regionalcode</aspectName>
+         #   <aspectValueName>PAL</aspectValueName>
+         # </aspectFilter>",
+         "<aspectFilter>
+          <aspectName>Plattform</aspectName>
+          <aspectValueName>Nintendo 64</aspectValueName>
+          </aspectFilter>",
          "<itemFilter>",
          "<name>LocatedIn</name>",
          "<value>DE</value>",
          "</itemFilter>",
-         "<itemFilter>",
-         "<name>Condition</name>",
-         "<value>4000</value>",
+         # "<itemFilter>",
+         # "<name>Condition</name>",
+         # "<value>4000</value>",
          # "<value>",condition["verygood"],"</value>",
          # "<value>",condition["good"],"</value>",
          # "<value>",condition["acceptable"],"</value>",
-         "</itemFilter>",
+         # "</itemFilter>",
          "<itemFilter>",
          "<name>SoldItemsOnly</name>",
          "<value>true</value>",
@@ -40,14 +48,15 @@ get_query <- function(keyword, category_id){
 }
 
 
-keywords <- list("paper,mario -OVP",
-                 "diddy,kong,racing -OVP",
-                 "banjo,tooie -(OVP,kazooie)",
-                 "banjo,kazooie -(OVP,tooie)",
-                 "Conker -OVP",
-                 "mario,kart -OVP",
-                 "mario,party,3 -(1,2,OVP)",
-                 "mario,party,2 -(1,3,OVP)"
+keywords <- list("paper,mario -OVP"
+                 #,
+                 # "diddy,kong,racing -OVP",
+                 # "banjo,tooie -(OVP,kazooie)",
+                 # "banjo,kazooie -(OVP,tooie)",
+                 # "Conker -OVP",
+                 # "mario,kart -OVP",
+                 # "mario,party,3 -(1,2,OVP)",
+                 # "mario,party,2 -(1,3,OVP)"
                  )
 
 queries <- lapply(keywords, function(keyword) get_query(keyword, category_id = 139973))

@@ -8,7 +8,6 @@ library(XML)
 library(xml2)
 library(RODBC)
 library(RMySQL)
-library(DBI)
 
 
 ############################################
