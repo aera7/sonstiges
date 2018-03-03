@@ -1,3 +1,15 @@
+condition <- list();
+condition["New"] <- 1000
+condition["New_other"] <-1500
+condition["New_defect"] <-1750
+condition["New_refurb"] <-2000
+condition["Man_refurb"] <-2500
+condition["used"] <-3000
+condition["verygood"] <-4000
+condition["good"] <-5000
+condition["Acceptable"] <- 6000
+condition["NotWorking"] <- 7000
+
 
 get_query <- function(keyword, category_id){
   paste0("<?xml version='1.0' encoding=\"UTF-8\"?>",
@@ -10,7 +22,9 @@ get_query <- function(keyword, category_id){
          "</itemFilter>",
          "<itemFilter>",
          "<name>Condition</name>",
-         "<value>4000</value>",
+         "<value>",condition["verygood"],"</value>",
+         "<value>",condition["good"],"</value>",
+         "<value>",condition["acceptable"],"</value>",
          "</itemFilter>",
          "<itemFilter>",
          "<name>SoldItemsOnly</name>",
@@ -18,7 +32,7 @@ get_query <- function(keyword, category_id){
          "</itemFilter>",
          "<sortOrder>PricePlusShippingHighest</sortOrder>",
          "<paginationInput>",
-         "<entriesPerPage>10</entriesPerPage>",
+         "<entriesPerPage>200</entriesPerPage>",
          "<pageNumber>1</pageNumber>",
          "</paginationInput>",
          "</findCompletedItemsRequest>")

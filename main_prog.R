@@ -29,8 +29,7 @@ con <- dbConnect(RMySQL::MySQL(),
 ################# SOURCES ##################
 ############################################
 
-source("xml_querries.R")
-# source("http_querries.R")
+source("xml_queries.R")
 
 ############################################
 ################ FUNCTIONS #################
