@@ -9,7 +9,6 @@ library(xml2)
 library(RODBC)
 library(RMySQL)
 library(DBI)
-library(jsonlite)
 
 
 ############################################
@@ -72,79 +71,49 @@ xml_request <- function(xml_query, query_name, verbose = F){
 
 
 # do queries
-responses <- lapply(queries, xml_request, verbose=T)
+responses <- lapply(queries, xml_request, verbose=F)
 
-
-
-myconn <-odbcConnect("mydsn", uid="gametopia37@gmail.com", pwd="aardvark")
-
-SQL_inserts <- lapply(response$searchResult, function(x){
-  paste0("INSERT INTO products VALUES (",
-         "`",x$itemId,"`,",
-         "`",x$title,"`,",
-         "`",x$globalId,"`,",
-         "`",x$primaryCategory$categoryId,"`,",
-         "`",x$primaryCategory$categoryName,"`,",
-         "`",x$galleryURL,"`,",
-         "`",x$viewItemURL,"`,",
-         "`",x$paymentMethod,"`,",
-         "`",x$autoPay,"`,",
-         "`",x$postalCode,"`,",
-         "`",x$location,"`,",
-         "`",x$country,"`,",
-         "`",x$shippingInfo$shippingServiceCost,"`,",
-         "`",x$shippingInfo$shippingType,"`,",
-         "`",x$shippingInfo$shipToLocations,"`,",
-         "`",x$sellingStatus$currentPrice,"`,",
-         "`",x$sellingStatus$convertedCurrentPrice,"`,",
-         "`",x$sellingStatus$bidCount,"`,",
-         "`",x$sellingStatus$sellingState,"`,",
-         "`",x$listingInfo$bestOfferEnabled,"`,",
-         "`",x$listingInfo$buyItNowAvailable,"`,",
-         "`",x$listingInfo$startTime,"`,",
-         "`",x$listingInfo$endTime,"`,",
-         "`",x$listingInfo$listingType,"`,",
-         "`",x$listingInfo$gift,"`,",
-         "`",x$condition$conditionId,"`,",
-         "`",x$condition$conditionDisplayName,"`,",
-         "`",x$isMultiVariationListing,"`,",
-         "`",x$topRatedListing,"`,",
-         "`",x$eBayPlusEnabled,"`",
-         ")")})
-
-lapply(list, function)
-## tables to be updated
-## iterating through all itimes taking sorting out most important fields
-## to be defined which field of the reponse should be dropped
-
-dbListTables(con)
-dbReadTable(con, "")
-dbDisconnect(con)
-dbGetQuery(con, "SELECT * FROM mtcars")
-
-add_headers(a = 1, b = 2)
-add_headers(.headers =  c(a = "1", b = "2"))
-GET("http://httpbin.org/headers")
-# Add arbitrary headers
-GET("http://svcs.ebay.com/services/search/FindingService/v1",
-    add_headers(version = version$version.string))
-
-
-#add_headers(add_headers(.headers = c('X-EBAY-SOA-SECURITY-APPNAME' ='Sebastia-newheave-PRD-f8e35c535-843c594f',X-EBAY-SOA-OPERATION-NAME = "findCompletedItems")))
+count <- 0
+for(i in 1:length(responses)){
+  SQL_inserts <- lapply(responses[[i]]$searchResult, function(x){
+    paste0("INSERT INTO products VALUES (",
+           "'",x$itemId,"',",
+           "'",x$title,"',",
+           "'",x$globalId,"',",
+           "'",x$primaryCategory$categoryId,"',",
+           "'",x$primaryCategory$categoryName,"',",
+           "'",x$galleryURL,"',",
+           "'",x$viewItemURL,"',",
+           "'",x$paymentMethod,"',",
+           "'",x$autoPay,"',",
+           "'",x$postalCode,"',",
+           "'",x$location,"',",
+           "'",x$country,"',",
+           "'",x$shippingInfo$shippingServiceCost,"',",
+           "'",x$shippingInfo$shippingType,"',",
+           "'",x$shippingInfo$shipToLocations,"',",
+           "'",x$sellingStatus$currentPrice,"',",
+           "'",x$sellingStatus$convertedCurrentPrice,"',",
+           "'",x$sellingStatus$bidCount,"',",
+           "'",x$sellingStatus$sellingState,"',",
+           "'",x$listingInfo$bestOfferEnabled,"',",
+           "'",x$listingInfo$buyItNowAvailable,"',",
+           "'",x$listingInfo$startTime,"',",
+           "'",x$listingInfo$endTime,"',",
+           "'",x$listingInfo$listingType,"',",
+           "'",x$listingInfo$gift,"',",
+           "'",x$condition$conditionId,"',",
+           "'",x$condition$conditionDisplayName,"',",
+           "'",x$isMultiVariationListing,"',",
+           "'",x$topRatedListing,"',",
+           "'",x$eBayPlusEnabled,"'",
+           ")")})
+  ## data entry to db
+  lapply(SQL_inserts, function(q) tryCatch(dbSendQuery(con, q), error = function(e) warning(e) ))
+  count = count+length(SQL_inserts)
+}
 
 
 
 
 
-
-
-
-
-
-r <- GET(url)
-s$searchResult[[37]]$pricingTreatment[[1]]
-
-
-crimedat <- sqlFetch(myconn, "Crime")
-pundat <- sqlQuery(myconn, "select * from Punishment")
-close(myconn)
