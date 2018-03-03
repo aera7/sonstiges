@@ -22,9 +22,10 @@ get_query <- function(keyword, category_id){
          "</itemFilter>",
          "<itemFilter>",
          "<name>Condition</name>",
-         "<value>",condition["verygood"],"</value>",
-         "<value>",condition["good"],"</value>",
-         "<value>",condition["acceptable"],"</value>",
+         "<value>4000</value>",
+         # "<value>",condition["verygood"],"</value>",
+         # "<value>",condition["good"],"</value>",
+         # "<value>",condition["acceptable"],"</value>",
          "</itemFilter>",
          "<itemFilter>",
          "<name>SoldItemsOnly</name>",
@@ -39,8 +40,15 @@ get_query <- function(keyword, category_id){
 }
 
 
-keywords <- list("paper,mario -OVP", "paper,mario,anleitung -OVP", "paper,mario,OVP",
-                 "diddy,kong,racing -OVP")
+keywords <- list("paper,mario -OVP",
+                 "diddy,kong,racing -OVP",
+                 "banjo,tooie -(OVP,kazooie)",
+                 "banjo,kazooie -(OVP,tooie)",
+                 "Conker -OVP",
+                 "mario,kart -OVP",
+                 "mario,party,3 -(1,2,OVP)",
+                 "mario,party,2 -(1,3,OVP)"
+                 )
 
 queries <- lapply(keywords, function(keyword) get_query(keyword, category_id = 139973))
 names(queries) <- keywords

@@ -35,10 +35,16 @@ source("xml_queries.R")
 ################ FUNCTIONS #################
 ############################################
 
+dbDisconnectAll <- function(){
+  ile <- length(dbListConnections(MySQL())  )
+  lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
+  cat(sprintf("%s connection(s) closed.\n", ile))
+}
+
 
 ## XML Request via POST method
 # queries in list queries from xml_queries.R
-xml_request <- function(xml_query, query_name, verbose = F){
+xml_request <- function(xml_query, verbose = F){
   # do the post request
   # update the body param with the body request you need.
   r <- POST("https://svcs.ebay.com/services/search/FindingService/v1", 
@@ -48,12 +54,12 @@ xml_request <- function(xml_query, query_name, verbose = F){
                         'X-EBAY-SOA-GLOBAL-ID' = GLOBAL_ID,
                         'X-EBAY-SOA-RESPONSE-DATA-FORMAT' = 'XML'))
   if(status_code(r)!=200){
-    warning(paste("Bad Response:", query_name, " Status Code: ", status_code(r)))
+    warning(paste("Bad Response:", " Status Code: ", status_code(r)))
   }
   response <- as_list(content(r, as = "parsed"))[[1]]
   
   if(response$ack != "Success"){
-    warning(paste("Unsuccessful Query:", query_name, " ACK: ", response$ack))
+    warning(paste("Unsuccessful Query:", " ACK: ", response$ack))
   }
   if(verbose){
     lapply(response$searchResult, function(x) print(x$title[[1]]))
@@ -76,43 +82,43 @@ count <- 0
 for(i in 1:length(responses)){
   SQL_inserts <- lapply(responses[[i]]$searchResult, function(x){
     paste0("INSERT INTO products VALUES (",
-           "'",x$itemId,"',",
-           "'",x$title,"',",
-           "'",x$globalId,"',",
-           "'",x$primaryCategory$categoryId,"',",
-           "'",x$primaryCategory$categoryName,"',",
-           "'",x$galleryURL,"',",
-           "'",x$viewItemURL,"',",
-           "'",x$paymentMethod,"',",
-           "'",x$autoPay,"',",
-           "'",x$postalCode,"',",
-           "'",x$location,"',",
-           "'",x$country,"',",
-           "'",x$shippingInfo$shippingServiceCost,"',",
-           "'",x$shippingInfo$shippingType,"',",
-           "'",x$shippingInfo$shipToLocations,"',",
-           "'",x$sellingStatus$currentPrice,"',",
-           "'",x$sellingStatus$convertedCurrentPrice,"',",
-           "'",x$sellingStatus$bidCount,"',",
-           "'",x$sellingStatus$sellingState,"',",
-           "'",x$listingInfo$bestOfferEnabled,"',",
-           "'",x$listingInfo$buyItNowAvailable,"',",
-           "'",x$listingInfo$startTime,"',",
-           "'",x$listingInfo$endTime,"',",
-           "'",x$listingInfo$listingType,"',",
-           "'",x$listingInfo$gift,"',",
-           "'",x$condition$conditionId,"',",
-           "'",x$condition$conditionDisplayName,"',",
-           "'",x$isMultiVariationListing,"',",
-           "'",x$topRatedListing,"',",
-           "'",x$eBayPlusEnabled,"'",
+           "\'",x$itemId,"\',",
+           "\'",x$title,"\',",
+           "\'",x$globalId,"\',",
+           "\'",x$primaryCategory$categoryId,"\',",
+           "\'",x$primaryCategory$categoryName,"\',",
+           "\'",x$galleryURL,"\',",
+           "\'",x$viewItemURL,"\',",
+           "\'",x$paymentMethod,"\',",
+           "\'",x$autoPay,"\',",
+           "\'",x$postalCode,"\',",
+           "\'",x$location,"\',",
+           "\'",x$country,"\',",
+           "\'",x$shippingInfo$shippingServiceCost,"\',",
+           "\'",x$shippingInfo$shippingType,"\',",
+           "\'",x$shippingInfo$shipToLocations,"\',",
+           "\'",x$sellingStatus$currentPrice,"\',",
+           "\'",x$sellingStatus$convertedCurrentPrice,"\',",
+           "\'",x$sellingStatus$bidCount,"\',",
+           "\'",x$sellingStatus$sellingState,"\',",
+           "\'",x$listingInfo$bestOfferEnabled,"\',",
+           "\'",x$listingInfo$buyItNowAvailable,"\',",
+           "\'",x$listingInfo$startTime,"\',",
+           "\'",x$listingInfo$endTime,"\',",
+           "\'",x$listingInfo$listingType,"\',",
+           "\'",x$listingInfo$gift,"\',",
+           "\'",x$condition$conditionId,"\',",
+           "\'",x$condition$conditionDisplayName,"\',",
+           "\'",x$isMultiVariationListing,"\',",
+           "\'",x$topRatedListing,"\',",
+           "\'",x$eBayPlusEnabled,"\'",
            ")")})
   ## data entry to db
   lapply(SQL_inserts, function(q) tryCatch(dbSendQuery(con, q), error = function(e) warning(e) ))
   count = count+length(SQL_inserts)
 }
 
-
+RMySQL::dbDisconnect(con)
 
 
 
