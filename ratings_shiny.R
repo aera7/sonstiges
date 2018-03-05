@@ -1,4 +1,4 @@
-# rsconnect::setAccountInfo(name='roadrunner', token='95A63E11F736DDBEEE82D8CFB3950EC3', secret='LQDOXUcvUcqjU73Pip1y3CgGKFFjjaSD0nR+IHl0')
+rsconnect::setAccountInfo(name='roadrunner', token='95A63E11F736DDBEEE82D8CFB3950EC3', secret='LQDOXUcvUcqjU73Pip1y3CgGKFFjjaSD0nR+IHl0')
 
 
 library(shiny)
@@ -32,39 +32,39 @@ server <- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
-
-
-
-
-############################################
-################# PACKAGES #################
-############################################
-rm(list = ls())
-
-library(RODBC)
-library(RMySQL)
-
-
-
-############################################
-################# CONSTANTS ##################
-############################################
-
-
-
-
-############################################
-########## MAIN CODE TO INITINITY ##########
-############################################
-
-q <- "SELECT * FROM `products` WHERE `title` LIKE '%PAPER%%'"
-r <- dbGetQuery(con,q)
-
-for(i in 1:nrow(r))){
-  r$galleryURL[[i]]
-  
-  
-}
-
-library(rsconnect)
-rsconnect::deployApp('path/to/your/app')
+r <- GET("http://httpbin.org/get")
+# 
+# 
+# 
+# ############################################
+# ################# PACKAGES #################
+# ############################################
+# rm(list = ls())
+# 
+# library(RODBC)
+# library(RMySQL)
+# 
+# 
+# 
+# ############################################
+# ################# CONSTANTS ##################
+# ############################################
+# 
+# 
+# 
+# 
+# ############################################
+# ########## MAIN CODE TO INITINITY ##########
+# ############################################
+# 
+# q <- "SELECT * FROM `products` WHERE `title` LIKE '%PAPER%%'"
+# r <- dbGetQuery(con,q)
+# 
+# for(i in 1:nrow(r))){
+#   r$galleryURL[[i]]
+#   
+#   
+# }
+# 
+# library(rsconnect)
+# rsconnect::deployApp('path/to/your/app')
