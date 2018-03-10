@@ -48,7 +48,7 @@ get_query <- function(keyword, category_id){
 }
 
 
-keywords <- list("paper,mario -OVP"
+keywords <- list(c("paper mario","paper,mario -(OVP,anleitung)")
                  #,
                  # "diddy,kong,racing -OVP",
                  # "banjo,tooie -(OVP,kazooie)",
@@ -59,6 +59,7 @@ keywords <- list("paper,mario -OVP"
                  # "mario,party,2 -(1,3,OVP)"
                  )
 
-queries <- lapply(keywords, function(keyword) get_query(keyword, category_id = 139973))
+queries <- lapply(keywords, function(keyword) get_query(keyword[[2]], category_id = 139973))
 names(queries) <- keywords
+names_q <-lapply(keywords, function(keyword) keyword[[1]])
 
