@@ -48,14 +48,10 @@ get_query <- function(keyword, category_id){
 }
 
 
-keywords <- list(c("paper mario","paper,mario -(OVP,anleitung)")
-                 #,
-                 # "diddy,kong,racing -OVP",
-                 # "banjo,tooie -(OVP,kazooie)",
-                 # "banjo,kazooie -(OVP,tooie)",
-                 # "Conker -OVP",
-                 # "mario,kart -OVP",
-                 # "mario,party,3 -(1,2,OVP)",
+keywords <- list(c("paper mario","paper,mario"),
+                 c("banjo tooie","banjo,tooie -(kazooie)"),
+                  c("conker", "Conker"),
+                  c("mario party 3","mario,party,3 -(1,2)")
                  # "mario,party,2 -(1,3,OVP)"
                  )
 

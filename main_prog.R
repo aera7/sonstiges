@@ -73,7 +73,6 @@ xml_request <- function(xml_query, verbose = F){
 
 # connect to DB
 
-
 # do queries
 responses <- lapply(queries, xml_request, verbose=F)
 
@@ -82,8 +81,8 @@ for(i in 1:length(responses)){
   SQL_inserts <- lapply(responses[[i]]$searchResult, function(x){
     paste0("INSERT INTO products VALUES (",
            "\'",x$itemId,"\',",
-           "\'",names_q[[i]],"\',",
-           "\'",x$title,"\',",
+           "\'",gsub("'","''",names_q[[i]]),"\',",
+           "\'",gsub("'","''",x$title),"\',",
            "\'",x$globalId,"\',",
            "\'",x$primaryCategory$categoryId,"\',",
            "\'",x$primaryCategory$categoryName,"\',",
@@ -114,7 +113,8 @@ for(i in 1:length(responses)){
            "\'",x$eBayPlusEnabled,"\',",
            "\'\',",
            "\'\',",
-           "-1",
+           "-1,",
+           "\'\'",
            ")")})
   ## data entry to db
   lapply(SQL_inserts, function(q) tryCatch(dbSendQuery(con, q), error = function(e) warning(e) ))
