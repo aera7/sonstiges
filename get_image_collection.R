@@ -21,10 +21,9 @@ dbDisconnectAll <- function(){
 #############################################
 
 links <- dbGetQuery(con, "SELECT viewItemURL, itemId FROM products where images = ''")
-link <- "http://www.ebay.de/itm/Paper-Mario-Nintendo-64-N64-Top-/112754779347"
+# link <- "http://www.ebay.de/itm/Paper-Mario-Nintendo-64-N64-Top-/112754779347"
 
 idx <- 1:nrow(links)
-tmp <- lapply(idx, getImages)
 
 getImages <- function(i){
   viewItemURL = links[i, 1]
@@ -35,6 +34,9 @@ getImages <- function(i){
   #doc = htmlParse(doc, asText=TRUE)
   
   pos = regexpr('tdclass="imgimg140">', doc)
+  if(pos == -1){
+    return("")
+  }
   x2<-substr(doc, pos[1]+attr(pos, "match.length")+8, nchar(doc))
   pos = regexpr('style="display', x2)
   link2<-substr(x2, 1,pos[1]-2)
@@ -62,6 +64,9 @@ getImages <- function(i){
   tryCatch(dbSendQuery(con, q), error = function(e) warning(e) )
   # lapply(link_list, function(x) print(paste0("https://i.ebayimg.com/images/g/",x,"/s-l1600.jpg")))
 }
+
+
+tmp <- lapply(idx, getImages)
 ### HOW to make sure no connection issue raises.
 
 # write(temp_str, file = "data",append = FALSE, sep = " ")
