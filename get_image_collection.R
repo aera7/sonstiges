@@ -1,22 +1,12 @@
 library(httr)
 library(RCurl)
 library(XML)
+
 ############################################
-################# CONSTANTS ##################
+################# SOURCES ##################
 ############################################
 
-con <- dbConnect(RMySQL::MySQL(),
-                 dbname = "retrolan_newkirk",
-                 host = "ams30.siteground.eu",
-                 port = 3306,
-                 user =  "retrolan_gate",
-                 password = "sebastian1990")
-dbDisconnectAll <- function(){
-  ile <- length(dbListConnections(MySQL())  )
-  lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
-  cat(sprintf("%s connection(s) closed.\n", ile))
-}
-
+source("util.R")
 
 #############################################
 
