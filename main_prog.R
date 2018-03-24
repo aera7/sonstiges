@@ -112,9 +112,6 @@ for(i in 1:length(responses)){
            "\'",x$topRatedListing,"\',",
            "\'",x$eBayPlusEnabled,"\',",
            "\'\',",
-           "\'\',",
-           "-1,",
-           "\'\'",
            ")")})
   ## data entry to db
   lapply(SQL_inserts, function(q) tryCatch(dbSendQuery(con, q), error = function(e) warning(e) ))
