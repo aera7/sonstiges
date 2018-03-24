@@ -23,18 +23,24 @@ for (table in tables){
     
     html <- getURL(viewItemURL, followlocation = TRUE)
     doc<- gsub("[[:space:]]", "", html)
-    #doc = htmlParse(doc, asText=TRUE)
-    
-    pos = regexpr('tdclass="imgimg140">', doc)
-    if(pos == -1){
-      return("")
+    if(table == "products_open"){
+      doc2 <- doc
+    }else{
+      ############## for closed items, need 2nd request
+      #doc = htmlParse(doc, asText=TRUE)
+      
+      pos = regexpr('tdclass="imgimg140">', doc)
+      if(pos == -1){
+        return("")
+      }
+      x2<-substr(doc, pos[1]+attr(pos, "match.length")+8, nchar(doc))
+      pos = regexpr('style="display', x2)
+      link2<-substr(x2, 1,pos[1]-2)
+      html2 <- getURL(link2, followlocation = TRUE)
+      doc2<- gsub("[[:space:]]", "", html2)
+      ##########################
     }
-    x2<-substr(doc, pos[1]+attr(pos, "match.length")+8, nchar(doc))
-    pos = regexpr('style="display', x2)
-    link2<-substr(x2, 1,pos[1]-2)
     
-    html2 <- getURL(link2, followlocation = TRUE)
-    doc2<- gsub("[[:space:]]", "", html2)
     
     pos =  regexpr('ebay.viewItem.imageCarousel', doc2)
     pos2 = regexpr('ebay.viewItem.enlargeLayerv2', doc2)
