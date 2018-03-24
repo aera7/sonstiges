@@ -30,7 +30,7 @@ source("xml_queries.R")
 # connect to DB
 
 # do queries
-responses <- lapply(queries, xml_request, verbose=F)
+responses <- lapply(queries, xml_request, verbose=F, API_type = 'findCompletedItems')
 
 count <- 0
 for(i in 1:length(responses)){
