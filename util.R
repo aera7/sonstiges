@@ -2,7 +2,7 @@
 ################# CONSTANTS ##################
 ############################################
 
-GLOBAL_ID <- 'EBAY-DE'
+GLOBAL_IDS <- c("EBAY-DE", "EBAY-FR", "EBAY-GB", "EBAY-AU")
 SECURITY_APPNAME <- 'Sebastia-newheave-PRD-f8e35c535-843c594f'
 
 con <- dbConnect(RMySQL::MySQL(),
@@ -27,7 +27,7 @@ dbDisconnectAll <- function(){
 
 ## XML Request via POST method
 # queries in list queries from xml_queries.R
-xml_request <- function(xml_query, verbose = F, API_type){
+xml_request <- function(xml_query, verbose = F, API_type, GLOBAL_ID = 'EBAY-DE'){
   # do the post request
   # update the body param with the body request you need.
   r <- POST("https://svcs.ebay.com/services/search/FindingService/v1", 
