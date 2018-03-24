@@ -28,44 +28,9 @@ con <- dbConnect(RMySQL::MySQL(),
 ################# SOURCES ##################
 ############################################
 
+source("util.R")
 source("xml_queries.R")
 
-############################################
-################ FUNCTIONS #################
-############################################
-
-dbDisconnectAll <- function(){
-  ile <- length(dbListConnections(MySQL())  )
-  lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
-  cat(sprintf("%s connection(s) closed.\n", ile))
-}
-
-
-## XML Request via POST method
-# queries in list queries from xml_queries.R
-xml_request <- function(xml_query, verbose = F){
-  # do the post request
-  # update the body param with the body request you need.
-  r <- POST("https://svcs.ebay.com/services/search/FindingService/v1", 
-            body = xml_query, 
-            add_headers('X-EBAY-SOA-SECURITY-APPNAME' = SECURITY_APPNAME,
-                        'X-EBAY-SOA-OPERATION-NAME' =  'findCompletedItems' ,
-                        'X-EBAY-SOA-GLOBAL-ID' = GLOBAL_ID,
-                        'X-EBAY-SOA-RESPONSE-DATA-FORMAT' = 'XML'))
-  if(status_code(r)!=200){
-    warning(paste("Bad Response:", " Status Code: ", status_code(r)))
-  }
-  response <- as_list(content(r, as = "parsed"))[[1]]
-  
-  if(response$ack != "Success"){
-    warning(paste("Unsuccessful Query:", " ACK: ", response$ack))
-  }
-  if(verbose){
-    lapply(response$searchResult, function(x) print(x$title[[1]]))
-    print("------------------")
-  }
-  return(response)
-} 
 
 ############################################
 ########## MAIN CODE TO INITINITY ##########
