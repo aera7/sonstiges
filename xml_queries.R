@@ -11,7 +11,7 @@ condition["Acceptable"] <- 6000
 condition["NotWorking"] <- 7000
 
 
-get_query <- function(keyword, category_id){
+get_hist_query <- function(keyword, category_id){
   paste0("<?xml version='1.0' encoding=\"UTF-8\"?>",
          "<findCompletedItemsRequest xmlns=\"http://www.ebay.com/marketplace/search/v1/services\">",
          "<categoryId>",category_id,"</categoryId>",
@@ -47,6 +47,31 @@ get_query <- function(keyword, category_id){
          "</findCompletedItemsRequest>")
 }
 
+get_curr_query <- function(keyword, category_id, location){
+  paste0("<?xml version='1.0' encoding=\"UTF-8\"?>",
+         "<findItemsAdvanced xmlns='http://www.ebay.com/marketplace/search/v1/services'>",
+         #"<sortOrder>EndTime</sortOrder>",
+         "<keywords>",keyword,"</keywords>",
+         "<categoryId>",category_id,"</categoryId>",
+         "<aspectFilter>
+          <aspectName>Plattform</aspectName>
+          <aspectValueName>Nintendo 64</aspectValueName>
+          </aspectFilter>",
+         
+         "<itemFilter>",
+         "<name>LocatedIn</name>",
+         "<value>",location,"</value>",
+         "</itemFilter>",
+         
+         "<paginationInput>",
+         "<entriesPerPage>200</entriesPerPage>",
+         "<pageNumber>1</pageNumber>",
+         "</paginationInput>",
+         
+         "</findItemsAdvanced>"
+  )
+}
+
 
 keywords <- list(c("paper mario","paper,mario"),
                  c("banjo tooie","banjo,tooie -(kazooie)"),
@@ -55,7 +80,11 @@ keywords <- list(c("paper mario","paper,mario"),
                  # "mario,party,2 -(1,3,OVP)"
                  )
 
-queries <- lapply(keywords, function(keyword) get_query(keyword[[2]], category_id = 139973))
+queries <- lapply(keywords, function(keyword) get_hist_query(keyword[[2]], category_id = 139973))
 names(queries) <- keywords
 names_q <-lapply(keywords, function(keyword) keyword[[1]])
+
+queries_open <- lapply(keywords, function(keyword) get_curr_query(keyword[[2]], category_id = 139973, location = "DE"))
+names(queries_open) <- keywords
+names_q_open <-lapply(keywords, function(keyword) keyword[[1]])
 
